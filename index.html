@@ -924,14 +924,34 @@ function initCanvas(){
 
 /* ============================== INIT ============================== */
 document.addEventListener('DOMContentLoaded', ()=>{
-  renderRFQ();
-  observeReveals(); animateCounters(); initCanvas();
+  try { renderRFQ(); } catch(e) { console.error('renderRFQ error:', e); }
+  try { observeReveals(); } catch(e) { console.error('observeReveals error:', e); }
+  try { animateCounters(); } catch(e) { console.error('animateCounters error:', e); }
+  try { initCanvas(); } catch(e) { console.error('initCanvas error:', e); }
+
   const h=(location.hash||'').replace('#','');
-  if(h && document.getElementById('page-'+h)) showPage(h);
-  setTimeout(()=>document.getElementById('preloader').classList.add('hide'), 450);
+  if(h && document.getElementById('page-'+h)) {
+    try { showPage(h); } catch(e) { console.error('showPage error:', e); }
+  }
+
+  setTimeout(()=>{
+    const preloader = document.getElementById('preloader');
+    if(preloader) preloader.classList.add('hide');
+  }, 450);
+
   try{
-    if(window.gsap) gsap.from('#page-home h1', {y:36, opacity:0, duration:1, ease:'power3.out', delay:.45});
-  }catch(e){}
+    if(window.gsap) {
+      gsap.from('#page-home h1', {
+        y:36,
+        opacity:0,
+        duration:1,
+        ease:'power3.out',
+        delay:.45
+      });
+    }
+  }catch(e){
+    console.error('GSAP error:', e);
+  }
 });
 </script>
 </body>
